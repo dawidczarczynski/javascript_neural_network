@@ -1,8 +1,6 @@
 import { Y_MAX, X_MAX } from './constants'
-import { predict } from './network'
  
-export function render(points, weights, generation) {
-  const header = `<p>Generation: ${generation}</p>`
+export function render(points) {
   const svg = `
     <svg width="${X_MAX}" height="${Y_MAX}">
       ${points.map(point =>
@@ -11,7 +9,7 @@ export function render(points, weights, generation) {
             cx="${point.x}"
             cy="${point.y}"
             r="3"
-            fill="${predict(weights, point) === -1 ? 'blue' : 'red'}" />
+            fill="${point.where > 0.5 ? 'blue' : 'red'}" />
           <line xl="0" x2="${X_MAX}" y2="${Y_MAX}" stroke="gray" />
         `
       )}
@@ -20,9 +18,5 @@ export function render(points, weights, generation) {
 
   document
     .getElementById('root')
-    .innerHTML = `${header}${svg}`
-}
-
-export function clear() {
-  document.getElementById('root').innerHTML = ''
+    .innerHTML = svg
 }
