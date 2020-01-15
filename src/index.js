@@ -6,7 +6,7 @@ import { render } from './render';
 
 const brain = new NeuralNetwork([2, 7, 8, 5, 1]);
 
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100000; i++) {
   const x = Math.random()
   const y = Math.random()
   brain.train([x, y], (x > y ? [1] : [0]));

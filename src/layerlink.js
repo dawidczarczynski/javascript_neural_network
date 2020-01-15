@@ -2,9 +2,9 @@ import Matrix from './matrix'
 
 class LayerLink {
 
-    constructor(prevNode_count, node_count) {
-        this.weights = new Matrix(node_count, prevNode_count);
-        this.bias = new Matrix(node_count, 1);
+    constructor(previousLayerNeurons, neurons) {
+        this.weights = new Matrix(neurons, previousLayerNeurons);
+        this.bias = new Matrix(neurons, 1);
         this.weights.randomize();
         this.bias.randomize();
     }
