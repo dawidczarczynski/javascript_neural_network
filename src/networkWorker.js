@@ -1,5 +1,6 @@
 
 import NeuralNetwork from './nn'
+import { rand } from './utils'
 
 console.log("Network thread: Constructing neural network...");
 const brain = new NeuralNetwork([2, 7, 8, 5, 1]);
@@ -11,7 +12,7 @@ onmessage = event => {
   switch (message.type) {
     case "LEARN":
       const { iterations } = message
-      console.log("Network thread: Starting network learning...")
+      console.log(`Network thread: Starting network learning... Iterations: ${iterations}`)
 
       for (let i = 0; i < iterations; i++) {
         const x = Math.random()
@@ -21,7 +22,7 @@ onmessage = event => {
 
       console.log("Network thread: Network learnt")
 
-      postMessage({ type: "STATUS", status: "LEARNT" })
+      postMessage({ type: "READY" })
       break
 
     case "PREDICT":

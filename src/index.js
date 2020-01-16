@@ -1,28 +1,27 @@
 import * as R from 'ramda'
-import { Y_MAX, X_MAX } from './constants'
+import Renderer from './renderer'
+import NetworkThread from './networkThread'
 import { rand } from './utils'
-import { render } from './render';
+import { X_MAX, Y_MAX } from './constants';
 
-const networkThread = new Worker('./network.js', { type: 'module' })
+let points = [];
+const generatePoints = () => R.range(0, 100).map(() => ({
+  x: rand(0, X_MAX),
+  y: rand(0, Y_MAX)
+}))
 
-networkThread.onmessage = event => {
-  const message = event.data;
+const renderer = new Renderer()
+const thread = new NetworkThread({
+  onPrediction: points => renderer.renderPoints(points)
+})
 
-  switch (message.type) {
+renderer.configure({
+  onGenerate: () => {
+    points = generatePoints()
+    thread.predict(points)
+  },
+  onLearn: iterations => thread.learnNetwork(iterations),
+  onPredict: () => thread.predict(points)
+})
 
-    case "STATUS":
-      const points = R.range(0, 100).map(_ => ({
-        x: rand(0, X_MAX),
-        y: rand(0, Y_MAX)
-      }))
-      networkThread.postMessage(JSON.stringify({ type: 'PREDICT', points }))
-      break
-
-    case "PREDICTION": 
-      const { predictions } = message
-      render(predictions)
-      break
-  
-  }
-}
-networkThread.postMessage(JSON.stringify({ type: 'LEARN', iterations: 1000000 }))
+renderer.renderLayout()
