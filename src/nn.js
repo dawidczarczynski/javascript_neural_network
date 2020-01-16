@@ -104,6 +104,8 @@ class NeuralNetwork {
                 layerError
             );
         }
+
+        return layerErrors[this.layersNumber].data
     }
     
 }
